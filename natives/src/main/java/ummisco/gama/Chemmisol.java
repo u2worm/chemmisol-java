@@ -8,21 +8,21 @@ import java.util.Properties;
 
 public class Chemmisol 
 {
-	static {
+	public static void loadLibrary(String project_properties, String lib_directory_property) {
 		// Load library
 		InputStream is = Chemmisol.class.getClassLoader()
-			.getResourceAsStream("chemmisol.java.properties");
+			.getResourceAsStream(project_properties);
 		Properties properties = new Properties();
 		try {
 			properties.load(is);
 		} catch (IOException e) {
 			System.err.println(e);
 		}
-		Path jsoncpp_library = FileSystems.getDefault().getPath(
-				properties.getProperty("cmake.build.directory")
-				).resolve("lib").resolve(System.mapLibraryName("jsoncpp-java"))
+		Path libchemmisol = FileSystems.getDefault().getPath(
+				properties.getProperty(lib_directory_property)
+				).resolve(System.mapLibraryName("chemmisol-java"))
 			.toAbsolutePath();
-		System.out.println("Loading jsoncpp library from " + jsoncpp_library.toString());
-		System.load(jsoncpp_library.toString());
+		System.out.println("Loading chemmisol library from " + libchemmisol.toString());
+		System.load(libchemmisol.toString());
 	}
 }
