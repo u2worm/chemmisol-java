@@ -111,24 +111,4 @@
           </plugin>
       </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>linux-x86_64-release</id>
-      <activation>
-        <os>
-          <family>linux</family>
-          <arch>amd64</arch>
-        </os>
-      </activation>
-      <properties>
-        <platform>linux-x86_64</platform>
-        <build.type>release</build.type>
-        <cmake.classifier>linux-x86_64</cmake.classifier>
-        <cmake.build.directory>
-          ${project.build.directory}/${platform}-${build.type}/cmake
-        </cmake.build.directory>
-      </properties>
-    </profile>
-  </profiles>
 </project>

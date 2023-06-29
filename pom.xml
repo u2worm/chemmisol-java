@@ -4,6 +4,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>ummisco.gama.chemmisol</groupId>
+    <artifactId>profiles</artifactId>
+    <version>0.1</version>
+    <relativePath>./profiles/pom.xml</relativePath>
+  </parent>
+
   <groupId>ummisco.gama.chemmisol</groupId>
   <artifactId>root</artifactId>
   <version>0.1</version>
@@ -21,6 +28,8 @@
 
   <modules>
     <module>natives</module>
+    <module>profiles</module>
+    <module>setup</module>
   </modules>
 
   <dependencies>

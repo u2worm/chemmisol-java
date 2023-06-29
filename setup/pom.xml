@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>ummisco.gama.chemmisol</groupId>
+    <artifactId>profiles</artifactId>
+    <version>0.1</version>
+    <relativePath>../profiles/pom.xml</relativePath>
+  </parent>
+
+  <groupId>ummisco.gama.chemmisol</groupId>
+  <artifactId>setup</artifactId>
+  <version>0.1</version>
+  <packaging>pom</packaging>
+
+  <name>setup</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+      <dependency>
+          <groupId>ummisco.gama.chemmisol</groupId>
+          <artifactId>natives</artifactId>
+          <version>0.1</version>
+      </dependency>
+  </dependencies>
+  <build>
+      <pluginManagement>
+          <plugins>
+              <plugin>
+                  <groupId>org.codehaus.mojo</groupId> 
+                  <artifactId>properties-maven-plugin</artifactId> 
+                  <version>1.0.0</version> 
+                  <executions> 
+                      <execution> 
+                          <phase>generate-resources</phase> 
+                          <goals> 
+                              <goal>write-project-properties</goal> 
+                          </goals> 
+                          <configuration> 
+                              <outputFile>${project.build.outputDirectory}/chemmisol.setup.properties</outputFile> 
+                          </configuration> 
+                      </execution> 
+                  </executions> 
+              </plugin>
+              <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <version>3.6.0</version>
+                  <executions>
+                      <execution>
+                          <id>unpack</id>
+                          <phase>compile</phase>
+                          <goals>
+                              <goal>unpack</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+                  <configuration>
+                      <artifactItems>
+                          <artifactItem>
+                              <!--Unpacks native libraries into the build directory-->
+                              <groupId>ummisco.gama.chemmisol</groupId>
+                              <artifactId>natives</artifactId>
+                              <version>0.1</version>
+                              <type>jar</type>
+                              <classifier>${platform}</classifier>
+                              <overWrite>true</overWrite>
+                              <outputDirectory>${cmake.build.directory}</outputDirectory>
+                          </artifactItem>
+                      </artifactItems>
+                  </configuration>
+              </plugin>
+          </plugins>
+      </pluginManagement>
+  </build>
+</project>

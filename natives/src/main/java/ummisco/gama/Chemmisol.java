@@ -25,4 +25,10 @@ public class Chemmisol
 		System.out.println("Loading chemmisol library from " + libchemmisol.toString());
 		System.load(libchemmisol.toString());
 	}
+
+    public static void loadLibrary() {
+        // Default location set up in the ummisco.gama.chemmisol.setup artifact
+        // (see the corresponding pom.xml)
+        loadLibrary("chemmisol.setup.properties", "cmake.build.directory");
+    }
 }
