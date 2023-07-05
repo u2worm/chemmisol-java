@@ -12,7 +12,7 @@ using namespace mineral;
 JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate
 (JNIEnv *, jobject) {
 	ChemicalSystem* system = new ChemicalSystem;
-	return (long) system;
+	return (jlong) system;
 }
 
 /*
