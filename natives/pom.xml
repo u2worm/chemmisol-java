@@ -55,6 +55,9 @@
                           </targetPath>
                           <options>
                               <option>-DBUILD_SHARED_LIBS:bool=on</option>
+							  <option>-DCMAKE_BUILD_TYPE=${build.type}</option>
+							  <option>-DJAVA_INCLUDE_PATH=${env.CMAKE_JAVA_HOME}/include</option>
+							  <option>-DJAVA_INCLUDE_PATH2=${env.CMAKE_JAVA_HOME}/include/${java.include.path2}</option>
                           </options>
                       </configuration>
                   </execution>
@@ -65,12 +68,9 @@
                           <goal>compile</goal>
                       </goals>
                       <configuration>
-                          <config>
-                              Release
-                          </config>
-                          <!--<target>-->
-                              <!--chemmisol-java-->
-                              <!--</target>-->
+						  <target>
+							  chemmisol-java
+						  </target>
                           <projectDirectory>
                               ${cmake.build.directory}
                           </projectDirectory>

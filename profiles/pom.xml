@@ -18,48 +18,58 @@
   <profiles>
       <profile>
           <id>windows-x86_64-release</id>
-          <activation>
-              <os>
-                  <family>windows</family>
-                  <arch>amd64</arch>
-              </os>
-          </activation>
+		  <activation>
+			  <os>
+				  <family>windows</family>
+				  <arch>amd64</arch>
+			  </os>
+		  </activation>
           <properties>
               <platform>windows-x86_64</platform>
               <build.type>release</build.type>
               <cmake.classifier>windows-x86_64</cmake.classifier>
               <cmake.config>${build.type}</cmake.config>
+              <cmake.build.directory>
+                  ${project.build.directory}/${platform}-${build.type}/cmake
+              </cmake.build.directory>
+			  <java.include.path2>win32</java.include.path2>
           </properties>
       </profile>
       <profile>
           <id>linux-x86_64-release</id>
-          <activation>
-              <os>
-                  <family>linux</family>
-                  <arch>amd64</arch>
-              </os>
-          </activation>
+		  <activation>
+			  <os>
+				  <family>linux</family>
+				  <arch>amd64</arch>
+			  </os>
+		  </activation>
           <properties>
               <platform>linux-x86_64</platform>
               <build.type>release</build.type>
               <cmake.classifier>linux-x86_64</cmake.classifier>
+              <cmake.config>${build.type}</cmake.config>
               <cmake.build.directory>
                   ${project.build.directory}/${platform}-${build.type}/cmake
               </cmake.build.directory>
+			  <java.include.path2>linux</java.include.path2>
           </properties>
       </profile>
       <profile>
           <id>mac-x86_64-release</id>
-          <activation>
-              <os>
-                  <family>mac</family>
-                  <arch>x86_64</arch>
-              </os>
-          </activation>
+		  <activation>
+			  <os>
+				  <family>mac</family>
+				  <arch>x86_64</arch>
+			  </os>
+		  </activation>
           <properties>
               <platform>mac-x86_64</platform>
               <build.type>release</build.type>
               <cmake.classifier>mac-x86_64</cmake.classifier>
+              <cmake.config>${build.type}</cmake.config>
+              <cmake.build.directory>
+                  ${project.build.directory}/${platform}-${build.type}/cmake
+              </cmake.build.directory>
           </properties>
       </profile>
   </profiles>

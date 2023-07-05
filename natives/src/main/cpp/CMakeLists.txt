@@ -14,7 +14,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(chemmisol-cpp)
 
-find_package(JNI REQUIRED)
+find_package(JNI REQUIRED OPTIONAL_COMPONENTS AWT JVM)
 
 add_library(chemmisol-java
 	src/chemmisol/ummisco_gama_chemmisol_ChemicalSystem.cpp
