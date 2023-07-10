@@ -23,6 +23,22 @@ JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_dispose
   (JNIEnv *, jobject, jlong);
 
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    addReaction
+ * Signature: (JLummisco/gama/chemmisol/Reaction;)V
+ */
+JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addReaction
+  (JNIEnv *, jobject, jlong, jobject);
+
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    addComponent
+ * Signature: (JLummisco/gama/chemmisol/Component;)V
+ */
+JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
+  (JNIEnv *, jobject, jlong, jobject);
+
 #ifdef __cplusplus
 }
 #endif
