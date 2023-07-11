@@ -25,14 +25,18 @@ class JNIInterface {
 		
 	public:
 		JNIInterface(JNIEnv* env);
+		std::string convert(jstring str) const;
 
 		std::string GetEnumerator(const char* class_name, const char* enumerator_name) const;
 
 		jobject GetStaticObjectField(
 				const char* class_name, const char* name, const char* signature) const;
 
+		void CallVoidMethod(
+				jobject obj, const char* name, const char* signature, ...) const;
+
 		jobject CallObjectMethod(
-				jobject obj, const char* name, const char* signature) const;
+				jobject obj, const char* name, const char* signature, ...) const;
 
 		std::string CallStringMethod(
 				jobject obj, const char* name, const char* signature) const;

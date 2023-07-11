@@ -42,6 +42,15 @@ JNIInterface::JNIInterface(JNIEnv* env)
 		mapPhase(*this, map_phase);
 	}
 
+std::string JNIInterface::convert(jstring java_str) const {
+	jsize n = env->GetStringUTFLength(java_str);
+	const char* _chars = env->GetStringUTFChars(java_str, NULL);
+
+	std::string cpp_str(_chars, (std::size_t) n);
+	env->ReleaseStringUTFChars(java_str, _chars);
+	return cpp_str;
+}
+
 jobject JNIInterface::GetStaticObjectField(
 		const char* class_name, const char* name, const char* signature) const {
 	auto clazz = env->FindClass(class_name);
@@ -50,10 +59,21 @@ jobject JNIInterface::GetStaticObjectField(
 			);
 }
 
+void JNIInterface::CallVoidMethod(
+		jobject obj, const char* name, const char* signature, ...) const {
+	std::va_list args;
+	va_start(args, signature);
+	env->CallVoidMethodV(obj,
+			env->GetMethodID(env->GetObjectClass(obj), name, signature), args
+			);
+}
+
 jobject JNIInterface::CallObjectMethod(
-		jobject obj, const char* name, const char* signature) const {
-	return env->CallObjectMethod(obj,
-			env->GetMethodID(env->GetObjectClass(obj), name, signature)
+		jobject obj, const char* name, const char* signature, ...) const {
+	std::va_list args;
+	va_start(args, signature);
+	return env->CallObjectMethodV(obj,
+			env->GetMethodID(env->GetObjectClass(obj), name, signature), args
 			);
 }
 
@@ -62,12 +82,7 @@ std::string JNIInterface::CallStringMethod(
 	jstring java_str = (jstring) env->CallObjectMethod(obj,
 			env->GetMethodID(env->GetObjectClass(obj), name, signature)
 			);
-	jsize n = env->GetStringUTFLength(java_str);
-	const char* _chars = env->GetStringUTFChars(java_str, NULL);
-
-	std::string cpp_str(_chars, (std::size_t) n);
-	env->ReleaseStringUTFChars(java_str, _chars);
-	return cpp_str;
+	return convert(java_str);
 }
 
 double JNIInterface::CallDoubleMethod(

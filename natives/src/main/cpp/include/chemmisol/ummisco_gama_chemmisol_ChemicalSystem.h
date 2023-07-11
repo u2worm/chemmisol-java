@@ -39,6 +39,30 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addReaction
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
   (JNIEnv *, jobject, jlong, jobject);
 
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    fixPH
+ * Signature: (JD)V
+ */
+JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH
+  (JNIEnv *, jobject, jlong, jdouble);
+
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    solve
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_solve
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    concentration
+ * Signature: (JLjava/lang/String;)D
+ */
+JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_concentration
+  (JNIEnv *, jobject, jlong, jstring);
+
 #ifdef __cplusplus
 }
 #endif
