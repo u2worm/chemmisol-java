@@ -1,15 +1,19 @@
 #include "jni_interface.h"
 
+el::Logger* chemmisol_java_logger = chemmisol::init_logger(CHEM_JAVA_LOGID);
+
 jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-	el::Configurations logger_conf;
-	logger_conf.setToDefault();
-
-	logger_conf.setGlobally(
-			el::ConfigurationType::Format, "[chemmisol-cpp][%level] %msg");
-	logger_conf.setGlobally(
-			el::ConfigurationType::Filename, "chemmisol-cpp.log");
-	el::Loggers::reconfigureLogger("default", logger_conf);
-
+/*
+ *    el::Configurations logger_conf;
+ *    logger_conf.setToDefault();
+ *
+ *    logger_conf.setGlobally(
+ *            el::ConfigurationType::Format, "[chemmisol-cpp][%level] %msg");
+ *    logger_conf.setGlobally(
+ *            el::ConfigurationType::Filename, "chemmisol-cpp.log");
+ *    el::Loggers::reconfigureLogger("default", logger_conf);
+ *
+ */
 	return JNI_VERSION_10;
 }
 

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <list>
 
-#include "logging.h"
+#include "chemmisol/logging.h"
 #include "chemmisol.h"
 
 #define JINT "I"
@@ -13,6 +13,11 @@
 #define JSTRING "Ljava/lang/String;"
 #define JITERATOR "Ljava/util/Iterator;"
 #define JPHASE "Lummisco/gama/chemmisol/Phase;"
+
+#define CHEM_JAVA_LOGID "chemmisol-java"
+#define CHEM_JAVA_LOG(LEVEL) CLOG(LEVEL, CHEM_JAVA_LOGID)
+
+extern el::Logger* chemmisol_java_logger;
 
 jint JNI_OnLoad(JavaVM *vm, void *reserved);
 
