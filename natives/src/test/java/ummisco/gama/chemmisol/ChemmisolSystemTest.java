@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import ummisco.gama.Chemmisol;
+import ummisco.gama.chemmisol.ChemicalSystem.ChemmisolCoreException;
 
 /**
  * Unit test for Chemmisol.
@@ -34,8 +35,6 @@ public class ChemmisolSystemTest
 	{
 		try (ChemicalSystem system = new ChemicalSystem()) {
 			assertNotNull(system);
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
@@ -48,8 +47,6 @@ public class ChemmisolSystemTest
 				.addReagent("H+", 4, Phase.AQUEOUS)
 				.addReagent("PO4-3", 1, Phase.AQUEOUS);
 			system.addReaction(test_reaction);
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
@@ -63,10 +60,11 @@ public class ChemmisolSystemTest
 				.addReagent("PO4-3", 1, Phase.AQUEOUS);
 			system.addReaction(test_reaction);
 
-			Component P = new Component("PO4-3", Phase.AQUEOUS, 0.1);
+			ChemicalComponent P = new ChemicalComponent(
+					"PO4-3", Phase.AQUEOUS, 0.1
+					);
 			system.addComponent(P);
-		} catch (Exception e) {
-			// TODO: handle exception
+			system.addComponent(new Solvent("H2O"));
 		}
 	}
 
@@ -76,13 +74,11 @@ public class ChemmisolSystemTest
 		try (ChemicalSystem system = new ChemicalSystem()) {
 			system.fixPH(7.5);
 			assertEquals(system.concentration("H+"), Math.pow(10, -7.5), 1e-15);
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
 	@Test
-	public void solve()
+	public void solve() throws ChemmisolCoreException
 	{
 		try (ChemicalSystem system = new ChemicalSystem()) {
 			Reaction test_reaction = new Reaction("H4PO3", 13.192)
@@ -91,10 +87,10 @@ public class ChemmisolSystemTest
 				.addReagent("PO4-3", 1, Phase.AQUEOUS);
 			system.addReaction(test_reaction);
 
-			Component PO4 = new Component("PO4-3", Phase.AQUEOUS, 0.1);
+			ChemicalComponent PO4 = new ChemicalComponent("PO4-3", Phase.AQUEOUS, 0.1);
 			system.addComponent(PO4);
-			Component H4PO3 = new Component("H4PO3", Phase.AQUEOUS, 0);
-			system.addComponent(H4PO3);
+			ChemicalSpecies H4PO3 = new ChemicalSpecies("H4PO3", Phase.AQUEOUS);
+			system.addSpecies(H4PO3);
 
 			system.fixPH(7.5);
 
@@ -108,8 +104,40 @@ public class ChemmisolSystemTest
 						PO4.getConcentration()*Math.pow(system.concentration("H+"), 4)
 						)
 					);
-		} catch (Exception e) {
-			// TODO: handle exception
+		}
+	}
+
+	@Test(expected = ChemmisolCoreException.class)
+	public void solveMissingSpeciesInReactionException() throws ChemmisolCoreException {
+		try (ChemicalSystem system = new ChemicalSystem()) {
+			// Too many components specified, so that the reaction has no
+			// "produced species".
+			system.addComponent(new Solvent("H2O"));
+			system.addComponent(new ChemicalComponent("H2", Phase.AQUEOUS, 0.1));
+			system.addComponent(new ChemicalComponent("O2", Phase.AQUEOUS, 0.1));
+
+			system.addReaction(new Reaction("O2", 13.12)
+				.addReagent("H2O", 2, Phase.AQUEOUS)
+				.addReagent("H2", -2, Phase.AQUEOUS)
+				.addReagent("O2", -1, Phase.AQUEOUS));
+
+			system.solve();
+		}
+	}
+
+	@Test(expected = ChemmisolCoreException.class)
+	public void solveInvalidSpeciesInReactionException() throws ChemmisolCoreException {
+		try (ChemicalSystem system = new ChemicalSystem()) {
+			// Missing components, so that the reaction has too many "produced
+			// species".
+			system.addComponent(new Solvent("H2O"));
+
+			system.addReaction(new Reaction("O2", 13.12)
+				.addReagent("H2O", 2, Phase.AQUEOUS)
+				.addReagent("H2", -2, Phase.AQUEOUS)
+				.addReagent("O2", -1, Phase.AQUEOUS));
+
+			system.solve();
 		}
 	}
 }

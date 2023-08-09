@@ -7,72 +7,80 @@ import java.util.HashMap;
 public class ChemicalSystem implements AutoCloseable {
 	private static final Cleaner cleaner = Cleaner.create();
 	private static class CleanState implements Runnable {
-		private ChemicalSystem system;
+		private long chemical_system_ptr;
 
-		CleanState(ChemicalSystem system) {
-			this.system = system;
+		CleanState(long chemical_system_ptr) {
+			this.chemical_system_ptr = chemical_system_ptr;
 		}
 
 		@Override
 		public void run() {
-			system.dispose();
+			System.out.println("[CHEMMISOL] Clean ChemicalSystem " + chemical_system_ptr);
+			ChemicalSystem.dispose(chemical_system_ptr);
 		}
 	}
 	private final CleanState clean_state;
 	private final Cleaner.Cleanable cleanable;
 
+	public static class ChemmisolCoreException extends java.lang.Exception {
+		ChemmisolCoreException(String chemmisol_message) {
+			super("Exception thrown by the chemmisol core library: "
+					+ chemmisol_message);
+		}
+	};
+
 	private long chemical_system_ptr;
-	private Map<String, Component> tracked_components;
+	private Map<String, ChemicalSpecies> tracked_species;
 
 	public ChemicalSystem() {
-		chemical_system_ptr = this.allocate();
-		this.clean_state = new CleanState(this);
+		chemical_system_ptr = ChemicalSystem.allocate();
+		this.clean_state = new CleanState(chemical_system_ptr);
 		this.cleanable = cleaner.register(this, clean_state);
-		this.tracked_components = new HashMap<String, Component>();
+		this.tracked_species = new HashMap<String, ChemicalSpecies>();
 	}
 
-	private native long allocate();
-	private native void dispose(long chemical_system_ptr);
+	private native static long allocate();
+	private native static void dispose(long chemical_system_ptr);
 
-	private native void addReaction(long chemical_system_ptr, Reaction reaction);
-	private native void addComponent(long chemical_system_ptr, Component component);
-	private native void fixPH(long chemical_system_ptr, double ph);
+	private native static void addReaction(long chemical_system_ptr, Reaction reaction);
+	private native static void addComponent(long chemical_system_ptr, ChemicalComponent component);
+	private native static void fixPH(long chemical_system_ptr, double ph);
 
-	private native void solve(long chemical_system_ptr);
+	private native static void solve(long chemical_system_ptr) throws ChemmisolCoreException;
 
-	private native double concentration(
+	private native static double concentration(
 			long chemical_system_ptr, String component_name);
 
 	public void addReaction(Reaction reaction) {
-		this.addReaction(chemical_system_ptr, reaction);
+		ChemicalSystem.addReaction(chemical_system_ptr, reaction);
 	}
 
-	public void track(Component component) {
-		tracked_components.put(component.getName(), component);
+	public void addComponent(ChemicalComponent component) {
+		ChemicalSystem.addComponent(chemical_system_ptr, component);
+		addSpecies(component.getSpecies());
 	}
 
-	public void addComponent(Component component) {
-		this.addComponent(chemical_system_ptr, component);
-		track(component);
+	public void addSpecies(ChemicalSpecies species) {
+		tracked_species.put(species.getName(), species);
 	}
 
 	public void fixPH(double ph) {
-		this.fixPH(chemical_system_ptr, ph);
+		ChemicalSystem.fixPH(chemical_system_ptr, ph);
 	}
 
-	public void solve() {
-		this.solve(chemical_system_ptr);
-		for(Component c : tracked_components.values()) {
+	public void solve() throws ChemmisolCoreException {
+		ChemicalSystem.solve(chemical_system_ptr);
+		for(ChemicalSpecies c : tracked_species.values()) {
 			c.setConcentration(concentration(chemical_system_ptr, c.getName()));
 		}
 	}
 
-	public double concentration(String component_name) {
-		return this.concentration(chemical_system_ptr, component_name);
+	public double concentration(String species_name) {
+		return ChemicalSystem.concentration(chemical_system_ptr, species_name);
 	}
 
 	protected void dispose() {
-		this.dispose(chemical_system_ptr);
+		ChemicalSystem.dispose(chemical_system_ptr);
 	}
 
 	@Override

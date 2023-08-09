@@ -50,7 +50,7 @@ public class Chemmisol
 	private static void loadLibrary(Class<?> clazz, URL url_to_chemmisol_library)
 			throws IOException {
 		System.out.println(LOG + "Loading native library from "
-				+ url_to_chemmisol_library.toString());
+				+ url_to_chemmisol_library.toString() + "...");
 		switch(url_to_chemmisol_library.getProtocol()) {
 			case FILE_PROTOCOL:
 				loadLibrary(url_to_chemmisol_library.getPath());

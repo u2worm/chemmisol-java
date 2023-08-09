@@ -21,45 +21,52 @@ extern el::Logger* chemmisol_java_logger;
 
 jint JNI_OnLoad(JavaVM *vm, void *reserved);
 
-class JNIInterface {
-	private:
-		JNIEnv* env;
+namespace chemmisol {
+	class JNIInterface {
+		private:
+			JNIEnv* env;
 
-		std::unordered_map<std::string, chemmisol::Phase> map_phase;
+			std::unordered_map<std::string, chemmisol::Phase> map_phase;
 
-		
-	public:
-		JNIInterface(JNIEnv* env);
-		std::string convert(jstring str) const;
 
-		std::string GetEnumerator(const char* class_name, const char* enumerator_name) const;
+		public:
+			JNIInterface(JNIEnv* env);
+			std::string convert(jstring str) const;
 
-		jobject GetStaticObjectField(
-				const char* class_name, const char* name, const char* signature) const;
+			std::string GetEnumerator(const char* class_name, const char* enumerator_name) const;
 
-		void CallVoidMethod(
-				jobject obj, const char* name, const char* signature, ...) const;
+			jobject GetStaticObjectField(
+					const char* class_name, const char* name, const char* signature) const;
 
-		jobject CallObjectMethod(
-				jobject obj, const char* name, const char* signature, ...) const;
+			void CallVoidMethod(
+					jobject obj, const char* name, const char* signature, ...) const;
 
-		std::string CallStringMethod(
-				jobject obj, const char* name, const char* signature) const;
+			jobject CallObjectMethod(
+					jobject obj, const char* name, const char* signature, ...) const;
 
-		double CallDoubleMethod(
-				jobject obj, const char* name, const char* signature) const;
+			std::string CallStringMethod(
+					jobject obj, const char* name, const char* signature) const;
 
-		long int CallIntMethod(
-				jobject obj, const char* name, const char* signature) const;
+			double CallDoubleMethod(
+					jobject obj, const char* name, const char* signature) const;
 
-		bool CallBooleanMethod(
-				jobject obj, const char* name, const char* signature) const;
+			long int CallIntMethod(
+					jobject obj, const char* name, const char* signature) const;
 
-		std::list<jobject> CallListMethod(
-				jobject obj, const char* name, const char* signature) const;
+			bool CallBooleanMethod(
+					jobject obj, const char* name, const char* signature) const;
 
-		chemmisol::Phase CallPhaseMethod(
-				jobject obj, const char* name, const char* signature) const;
-};
+			std::list<jobject> CallListMethod(
+					jobject obj, const char* name, const char* signature) const;
+
+			chemmisol::Phase CallPhaseMethod(
+					jobject obj, const char* name, const char* signature) const;
+
+			void ThrowNew(
+					const char* cpp_exception_class_name,
+					const char* exception_class_name,
+					const std::exception& cpp_exception) const;
+	};
+}
 
 #endif

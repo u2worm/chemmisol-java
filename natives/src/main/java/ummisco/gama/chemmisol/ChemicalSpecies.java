@@ -1,19 +1,22 @@
 package ummisco.gama.chemmisol;
 
-public class ChemicalSpecies {
-	private String name;
-	private Phase phase;
+public class ChemicalSpecies extends ChemicalEntity {
+	private double concentration;
+
+	ChemicalSpecies(String name, Phase phase, double concentration) {
+		super(name, phase);
+		this.concentration = concentration;
+	}
 
 	public ChemicalSpecies(String name, Phase phase) {
-		this.name = name;
-		this.phase = phase;
+		this(name, phase, 0.0);
 	}
 
-	public String getName() {
-		return name;
+	public double getConcentration() {
+		return concentration;
 	}
 
-	public Phase getPhase() {
-		return phase;
+	public void setConcentration(double concentration) {
+		this.concentration = concentration;
 	}
 }

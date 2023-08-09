@@ -4,6 +4,13 @@ project(chemmisol-java)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(CMAKE_CXX_FLAGS_DEBUG "\
+${CMAKE_CXX_FLAGS_DEBUG} -std=c++14 \
+-Wall -Wextra -Wpedantic -Wno-error=pedantic \
+-Woverloaded-virtual -Wnon-virtual-dtor \
+-Wno-range-loop-construct \
+")
+
 include(FetchContent)
 FetchContent_Declare(
   Chemmisol

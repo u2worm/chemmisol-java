@@ -4,45 +4,45 @@
 using namespace chemmisol;
 
 JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate
-(JNIEnv *, jobject) {
+(JNIEnv *, jclass) {
 	ChemicalSystem* system = new ChemicalSystem;
 	return (jlong) system;
 }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_dispose
-(JNIEnv *, jobject, jlong chemical_system_ptr) {
+(JNIEnv *, jclass, jlong chemical_system_ptr) {
 	delete (ChemicalSystem*) chemical_system_ptr;
 }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addReaction
-  (JNIEnv * env, jobject, jlong cpp_chemmical_system, jobject jreaction) {
-	  JNIInterface interface(env);
-	  std::string name = interface.CallStringMethod(
+  (JNIEnv * env, jclass, jlong cpp_chemmical_system, jobject jreaction) {
+	  JNIInterface jni_interface(env);
+	  std::string name = jni_interface.CallStringMethod(
 				  jreaction, "getName", "()" JSTRING
 				  );
 
-	  double logK = interface.CallDoubleMethod(jreaction,
+	  double logK = jni_interface.CallDoubleMethod(jreaction,
 					  "getLogK", "()" JDOUBLE
 				  );
 
-	  std::list<jobject> jreagents = interface.CallListMethod(jreaction,
+	  std::list<jobject> jreagents = jni_interface.CallListMethod(jreaction,
 			  "getReagents", "()Ljava/util/List;"
 			  );
 
 	  CHEM_JAVA_LOG(INFO) << "Adding reaction: " << name << " (log K=" << logK << "): ";
-	  std::vector<ReactionComponent> reaction_components;
+	  std::vector<Reagent> reaction_components;
 	  for(auto j : jreagents) {
 		  reaction_components.emplace_back(
 				  // name
-				  interface.CallStringMethod(j,
+				  jni_interface.CallStringMethod(j,
 					  "getName", "()" JSTRING
 					  ),
 				  // phase
-				  interface.CallPhaseMethod(j,
+				  jni_interface.CallPhaseMethod(j,
 					  "getPhase", "()" JPHASE
 					  ),
 				  // coefficient
-				  interface.CallIntMethod(j,
+				  jni_interface.CallIntMethod(j,
 					  "getCoefficient", "()" JINT
 					  )
 				  );
@@ -55,14 +55,14 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addReaction
   }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
-  (JNIEnv * env, jobject, jlong cpp_chemical_system, jobject jcomponent) {
-	  JNIInterface interface(env);
+  (JNIEnv * env, jclass, jlong cpp_chemical_system, jobject jcomponent) {
+	  JNIInterface jni_interface(env);
 	  std::string name = 
-		  interface.CallStringMethod(jcomponent, "getName", "()" JSTRING);
+		  jni_interface.CallStringMethod(jcomponent, "getName", "()" JSTRING);
 	  Phase phase =
-		  interface.CallPhaseMethod(jcomponent, "getPhase", "()" JPHASE);
+		  jni_interface.CallPhaseMethod(jcomponent, "getPhase", "()" JPHASE);
 	  double concentration =
-		  interface.CallDoubleMethod(jcomponent, "getConcentration", "()" JDOUBLE);
+		  jni_interface.CallDoubleMethod(jcomponent, "getConcentration", "()" JDOUBLE);
 
 	  CHEM_JAVA_LOG(INFO) << "Adding component: " << name << " (" << phase << "): " << concentration;
 
@@ -72,22 +72,38 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
   }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH
-  (JNIEnv * env, jobject, jlong cpp_chemical_system, jdouble ph) {
+  (JNIEnv *, jclass, jlong cpp_chemical_system, jdouble ph) {
+	  CHEM_JAVA_LOG(INFO) << "Fixing pH to " << ph << ".";
 	  ((ChemicalSystem*) cpp_chemical_system)->fixPH(ph);
   }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_solve
-  (JNIEnv * env, jobject, jlong cpp_chemical_system) {
-	  // TODO: 10 iterations for test purpose
+  (JNIEnv * env, jclass, jlong cpp_chemical_system) {
+	  JNIInterface jni_interface(env);
+	  CHEM_JAVA_LOG(INFO) << "Solving system using 100 iterations.";
 	  ((ChemicalSystem*) cpp_chemical_system)->setMaxIteration(100);
-
-	  ((ChemicalSystem*) cpp_chemical_system)->solveEquilibrium();
+	  try {
+		  ((ChemicalSystem*) cpp_chemical_system)->solveEquilibrium();
+	  }
+	  catch (const MissingProducedSpeciesInReaction& e) {
+		  jni_interface.ThrowNew(
+				  "chemmisol::MissingProducedSpeciesInReaction",
+				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
+				  e);
+	  }
+	  catch (const InvalidSpeciesInReaction& e) {
+		  jni_interface.ThrowNew(
+				  "chemmisol::InvalidSpeciesInReaction",
+				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
+				  e);
+	  }
+	  CHEM_JAVA_LOG(INFO) << "Done.";
   }
 
 JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_concentration
-  (JNIEnv * env, jobject, jlong chemical_system_ptr, jstring jcomponent_name) {
-	  JNIInterface interface(env);
+  (JNIEnv * env, jclass, jlong chemical_system_ptr, jstring jspecies_name) {
+	  JNIInterface jni_interface(env);
 	  return ((ChemicalSystem*) chemical_system_ptr)
-		  ->getComponent(interface.convert(jcomponent_name))
+		  ->getSpecies(jni_interface.convert(jspecies_name))
 			  .concentration();
   }

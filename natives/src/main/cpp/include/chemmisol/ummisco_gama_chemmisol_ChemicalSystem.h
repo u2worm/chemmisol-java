@@ -13,7 +13,7 @@ extern "C" {
  * Signature: ()J
  */
 JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
@@ -21,7 +21,7 @@ JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_dispose
-  (JNIEnv *, jobject, jlong);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_dispose
  * Signature: (JLummisco/gama/chemmisol/Reaction;)V
  */
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addReaction
-  (JNIEnv *, jobject, jlong, jobject);
+  (JNIEnv *, jclass, jlong, jobject);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
@@ -37,7 +37,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addReaction
  * Signature: (JLummisco/gama/chemmisol/Component;)V
  */
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
-  (JNIEnv *, jobject, jlong, jobject);
+  (JNIEnv *, jclass, jlong, jobject);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
@@ -45,7 +45,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
  * Signature: (JD)V
  */
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH
-  (JNIEnv *, jobject, jlong, jdouble);
+  (JNIEnv *, jclass, jlong, jdouble);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
@@ -53,7 +53,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_solve
-  (JNIEnv *, jobject, jlong);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
@@ -61,7 +61,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_solve
  * Signature: (JLjava/lang/String;)D
  */
 JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_concentration
-  (JNIEnv *, jobject, jlong, jstring);
+  (JNIEnv *, jclass, jlong, jstring);
 
 #ifdef __cplusplus
 }

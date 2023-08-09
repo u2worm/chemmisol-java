@@ -1,6 +1,6 @@
 package ummisco.gama.chemmisol;
 
-public class Reagent extends ChemicalSpecies {
+public class Reagent extends ChemicalEntity {
 	private int coefficient;
 
 	public Reagent(String name, int coefficient, Phase phase) {

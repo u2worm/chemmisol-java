@@ -14,6 +14,7 @@
 
 <properties>
   <classifier>${platform}</classifier>
+  <cmake.find.package>ALWAYS</cmake.find.package>
 </properties>
 
 <build>
@@ -37,7 +38,6 @@
     <plugin>
       <groupId>com.googlecode.cmake-maven-project</groupId>
       <artifactId>cmake-maven-plugin</artifactId>
-      <!--<version>3.23.2-b1</version>-->
       <version>3.26.3-b1</version>
       <executions>
         <execution>
@@ -59,7 +59,7 @@
               <option>-DJAVA_INCLUDE_PATH=${env.CMAKE_JAVA_HOME}/include</option>
               <option>-DJAVA_INCLUDE_PATH2=${env.CMAKE_JAVA_HOME}/include/${java.include.path2}</option>
               <option>-DCMAKE_EXPORT_COMPILE_COMMANDS=yes</option>
-			  <option>-DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=ALWAYS</option>
+			  <option>-DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=${cmake.find.package}</option>
             </options>
           </configuration>
         </execution>
