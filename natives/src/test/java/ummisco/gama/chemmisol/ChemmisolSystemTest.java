@@ -18,6 +18,10 @@ public class ChemmisolSystemTest
 		Chemmisol.loadLibraryFromDefaultProperties();
 	}
 
+	/**
+	 * 4 ULP's comparison (see
+	 * https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/)
+	 */
 	public static void assertDoubleEquals(double expected, double actual) {
 		assertTrue(
 				"expected:<" + expected + "> but was:<" + actual + ">",
@@ -69,11 +73,22 @@ public class ChemmisolSystemTest
 	}
 
 	@Test
-	public void fixPH()
+	public void fixPHinDefaultComponent()
 	{
 		try (ChemicalSystem system = new ChemicalSystem()) {
 			system.fixPH(7.5);
 			assertEquals(system.concentration("H+"), Math.pow(10, -7.5), 1e-15);
+		}
+	}
+
+	@Test
+	public void fixPHinComponent()
+	{
+		try (ChemicalSystem system = new ChemicalSystem()) {
+			ChemicalComponent h = new ChemicalComponent("h", Phase.AQUEOUS, 0);
+			system.addComponent(h);
+			system.fixPH(7.5, h);
+			assertEquals(h.getConcentration(), Math.pow(10, -7.5), 1e-15);
 		}
 	}
 
@@ -96,13 +111,44 @@ public class ChemmisolSystemTest
 
 			system.solve();
 
-			// 4 ULP's comparison (see
-			// https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/)
+			assertDoubleEquals(
+					PO4.getConcentration(), PO4.getSpecies().getConcentration()
+					);
+			assertDoubleEquals(
+					PO4.getTotalConcentration(), 0.1
+					);
 			assertDoubleEquals(
 					Math.pow(10, 13.192),
 					H4PO3.getConcentration()/(
 						PO4.getConcentration()*Math.pow(system.concentration("H+"), 4)
 						)
+					);
+		}
+	}
+
+	@Test
+	public void reactionQuotient() throws ChemmisolCoreException
+	{
+		try (ChemicalSystem system = new ChemicalSystem()) {
+			Reaction test_reaction = new Reaction("H4PO3", 13.192)
+				.addReagent("H4PO3", -1, Phase.AQUEOUS)
+				.addReagent("H", 4, Phase.AQUEOUS)
+				.addReagent("PO4-3", 1, Phase.AQUEOUS);
+			system.addReaction(test_reaction);
+
+			ChemicalComponent PO4 = new ChemicalComponent("PO4-3", Phase.AQUEOUS, 0.1);
+			system.addComponent(PO4);
+			ChemicalSpecies H4PO3 = new ChemicalSpecies("H4PO3", Phase.AQUEOUS);
+			system.addSpecies(H4PO3);
+			ChemicalComponent H = new ChemicalComponent("H", Phase.AQUEOUS, 0.0);
+			
+			system.fixPH(7.5, H);
+
+			system.solve();
+
+			assertDoubleEquals(
+					system.reactionQuotient("H4PO3"),
+					H4PO3.getConcentration() / (PO4.getConcentration() * Math.pow(H.getConcentration(), 4))
 					);
 		}
 	}

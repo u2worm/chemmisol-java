@@ -72,9 +72,31 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
   }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH
-  (JNIEnv *, jclass, jlong cpp_chemical_system, jdouble ph) {
-	  CHEM_JAVA_LOG(INFO) << "Fixing pH to " << ph << ".";
-	  ((ChemicalSystem*) cpp_chemical_system)->fixPH(ph);
+  (JNIEnv * env, jclass, jlong cpp_chemical_system, jdouble ph, jstring h_component_name) {
+	  JNIInterface jni_interface(env);
+	  std::string _component_name = jni_interface.convert(h_component_name);
+	  CHEM_JAVA_LOG(INFO) << "Fixing pH to " << ph << " in the " << _component_name << " component.";
+	  ((ChemicalSystem*) cpp_chemical_system)->fixPH(ph, _component_name);
+  }
+
+JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_setUp
+  (JNIEnv * env, jclass, jlong cpp_chemical_system) {
+	  JNIInterface jni_interface(env);
+	  try {
+		  ((ChemicalSystem*) cpp_chemical_system)->setUp();
+	  }
+	  catch (const MissingProducedSpeciesInReaction& e) {
+		  jni_interface.ThrowNew(
+				  "chemmisol::MissingProducedSpeciesInReaction",
+				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
+				  e);
+	  }
+	  catch (const InvalidSpeciesInReaction& e) {
+		  jni_interface.ThrowNew(
+				  "chemmisol::InvalidSpeciesInReaction",
+				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
+				  e);
+	  }
   }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_solve
@@ -106,4 +128,11 @@ JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_concentrati
 	  return ((ChemicalSystem*) chemical_system_ptr)
 		  ->getSpecies(jni_interface.convert(jspecies_name))
 			  .concentration();
+  }
+
+JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_reactionQuotient
+  (JNIEnv * env, jclass, jlong chemical_system_ptr, jstring jreaction_name) {
+	  JNIInterface jni_interface(env);
+	  return ((ChemicalSystem*) chemical_system_ptr)
+		  ->reactionQuotient(jni_interface.convert(jreaction_name));
   }
