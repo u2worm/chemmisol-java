@@ -45,6 +45,7 @@ public class ChemicalSystem implements AutoCloseable {
 	private native static void addReaction(long chemical_system_ptr, Reaction reaction);
 	private native static void addComponent(long chemical_system_ptr, ChemicalComponent component);
 	private native static void fixPH(long chemical_system_ptr, double ph, String string);
+	private native static void setTotalConcentration(long chemical_system_ptr, String component, double concentration);
 	private native static void setUp(long chemical_system_ptr) throws ChemmisolCoreException;
 	private native static void solve(long chemical_system_ptr) throws ChemmisolCoreException;
 
@@ -84,6 +85,11 @@ public class ChemicalSystem implements AutoCloseable {
 		} else {
 			fixPH(chemical_system_ptr, ph, "H+");
 		}
+	}
+
+	public void setTotalConcentration(ChemicalComponent component, double concentration) {
+		setTotalConcentration(chemical_system_ptr, component.getName(), concentration);
+		component.setTotalConcentration(concentration);
 	}
 
 	public void setUp() throws ChemmisolCoreException {

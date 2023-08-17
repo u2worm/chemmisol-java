@@ -31,9 +31,6 @@ public class ChemmisolSystemTest
 				);
 	}
 
-	/**
-	 * Rigorous Test :-)
-	 */
 	@Test
 	public void loadChemmisolLibrary()
 	{
@@ -118,12 +115,60 @@ public class ChemmisolSystemTest
 					PO4.getTotalConcentration(), 0.1
 					);
 			assertDoubleEquals(
+					PO4.getConcentration() + H4PO3.getConcentration(),
+					0.1
+					);
+			assertDoubleEquals(
 					Math.pow(10, 13.192),
 					H4PO3.getConcentration()/(
 						PO4.getConcentration()*Math.pow(system.concentration("H+"), 4)
 						)
 					);
 		}
+	}
+
+	@Test
+	public void setTotalConcentration() throws ChemmisolCoreException {
+		try (ChemicalSystem system = new ChemicalSystem()) {
+			Reaction test_reaction = new Reaction("H4PO3", 13.192)
+				.addReagent("H4PO3", -1, Phase.AQUEOUS)
+				.addReagent("H+", 4, Phase.AQUEOUS)
+				.addReagent("PO4-3", 1, Phase.AQUEOUS);
+			system.addReaction(test_reaction);
+
+			ChemicalComponent PO4 = new ChemicalComponent("PO4-3", Phase.AQUEOUS, 0.1);
+			system.addComponent(PO4);
+			ChemicalSpecies H4PO3 = new ChemicalSpecies("H4PO3", Phase.AQUEOUS);
+			system.addSpecies(H4PO3);
+
+			system.fixPH(7.5);
+			// Solves the system to reach a first equilibrium with a total P
+			// concentration of 0.1
+			system.solve();
+
+			// Sets the total concentration of P to 0.27 and solves the new
+			// equilibrium
+			system.setTotalConcentration(PO4, 0.27);
+			system.solve();
+
+			assertDoubleEquals(
+					PO4.getConcentration(), PO4.getSpecies().getConcentration()
+					);
+			assertDoubleEquals(
+					PO4.getTotalConcentration(), 0.27
+					);
+			assertDoubleEquals(
+					PO4.getConcentration() + H4PO3.getConcentration(),
+					0.27
+					);
+			assertDoubleEquals(
+					Math.pow(10, 13.192),
+					H4PO3.getConcentration()/(
+						PO4.getConcentration()*Math.pow(system.concentration("H+"), 4)
+						)
+					);
+		}
+
 	}
 
 	@Test

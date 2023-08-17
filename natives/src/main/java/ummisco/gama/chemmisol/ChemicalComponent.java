@@ -32,4 +32,8 @@ public class ChemicalComponent {
 	public double getTotalConcentration() {
 		return total_concentration;
 	}
+
+	void setTotalConcentration(double concentration) {
+		this.total_concentration = concentration;
+	}
 }

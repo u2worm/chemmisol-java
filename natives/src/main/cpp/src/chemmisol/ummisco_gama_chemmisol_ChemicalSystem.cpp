@@ -79,6 +79,17 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH
 	  ((ChemicalSystem*) cpp_chemical_system)->fixPH(ph, _component_name);
   }
 
+JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_setTotalConcentration
+  (JNIEnv * env, jclass, jlong cpp_chemical_system, jstring jcomponent_name, jdouble concentration) {
+	  JNIInterface jni_interface(env);
+	  std::string _component_name = jni_interface.convert(jcomponent_name);
+	  CHEM_JAVA_LOG(INFO) << "Set total concentration of " << _component_name << " to " << concentration << ".";
+	  ((ChemicalSystem*) cpp_chemical_system)->setTotalConcentration(
+		  ((ChemicalSystem*) cpp_chemical_system)->getComponent(_component_name),
+		  concentration
+		  );
+  }
+
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_setUp
   (JNIEnv * env, jclass, jlong cpp_chemical_system) {
 	  JNIInterface jni_interface(env);

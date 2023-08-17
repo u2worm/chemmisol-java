@@ -49,6 +49,14 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    setTotalConcentration
+ * Signature: (JLjava/lang/String;D)V
+ */
+JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_setTotalConcentration
+  (JNIEnv *, jclass, jlong, jstring, jdouble);
+
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
  * Method:    setUp
  * Signature: (J)V
  */
