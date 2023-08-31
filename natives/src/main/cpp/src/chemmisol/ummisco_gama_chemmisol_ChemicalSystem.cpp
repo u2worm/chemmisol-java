@@ -102,7 +102,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_setUp
 				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
 				  e);
 	  }
-	  catch (const InvalidSpeciesInReaction& e) {
+	  catch (const TooManyProducedSpeciesInReaction& e) {
 		  jni_interface.ThrowNew(
 				  "chemmisol::InvalidSpeciesInReaction",
 				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
@@ -124,7 +124,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_solve
 				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
 				  e);
 	  }
-	  catch (const InvalidSpeciesInReaction& e) {
+	  catch (const TooManyProducedSpeciesInReaction& e) {
 		  jni_interface.ThrowNew(
 				  "chemmisol::InvalidSpeciesInReaction",
 				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",

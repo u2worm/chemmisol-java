@@ -10,7 +10,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 	//logger_conf.setGlobally(
 			//el::ConfigurationType::Filename, "chemmisol-cpp.log");
 	logger_conf.set(el::Level::Trace, el::ConfigurationType::Enabled, "true");
-	el::Loggers::reconfigureLogger(chemmisol::chemmisol_core_logger, logger_conf);
+	el::Loggers::reconfigureLogger(chemmisol::core_logger, logger_conf);
 
 	return JNI_VERSION_10;
 }
