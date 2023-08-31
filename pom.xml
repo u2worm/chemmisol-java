@@ -61,9 +61,9 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.1.2</version>
-		  <configuration>
-			  <forkCount>0</forkCount>
-		  </configuration>
+          <configuration>
+              <forkCount>0</forkCount>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
@@ -90,7 +90,12 @@
           <artifactId>maven-dependency-plugin</artifactId>
           <version>3.6.0</version>
         </plugin>
-      </plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.5.0</version>
+        </plugin>
+    </plugins>
     </pluginManagement>
   </build>
 </project>
