@@ -10,7 +10,7 @@
   <version>0.1</version>
 </parent>
 <packaging>jar</packaging>
-<artifactId>natives</artifactId>
+<artifactId>chemmisol-java</artifactId>
 
 <properties>
   <classifier>${platform}</classifier>

@@ -1,4 +1,4 @@
-package ummisco.gama;
+package ummisco.gama.chemmisol;
 
 import java.io.IOException;
 import java.io.InputStream;

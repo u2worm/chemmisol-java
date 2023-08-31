@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ummisco.gama"},{"l":"ummisco.gama.chemmisol"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ummisco.gama.chemmisol"}];updateSearchResults();

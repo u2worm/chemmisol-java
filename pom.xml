@@ -27,7 +27,7 @@
   </properties>
 
   <modules>
-    <module>natives</module>
+    <module>chemmisol-java</module>
     <module>profiles</module>
     <module>setup</module>
   </modules>

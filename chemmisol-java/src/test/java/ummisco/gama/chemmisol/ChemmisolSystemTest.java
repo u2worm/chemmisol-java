@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import ummisco.gama.Chemmisol;
+import ummisco.gama.chemmisol.Chemmisol;
 import ummisco.gama.chemmisol.ChemicalSystem.ChemmisolCoreException;
 
 /**
