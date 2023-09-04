@@ -29,7 +29,6 @@
   <modules>
     <module>chemmisol-java</module>
     <module>profiles</module>
-    <module>setup</module>
   </modules>
 
   <dependencies>

@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
 	  Phase phase =
 		  jni_interface.CallPhaseMethod(jcomponent, "getPhase", "()" JPHASE);
 	  double concentration =
-		  jni_interface.CallDoubleMethod(jcomponent, "getConcentration", "()" JDOUBLE);
+		  jni_interface.CallDoubleMethod(jcomponent, "getTotalConcentration", "()" JDOUBLE);
 
 	  CHEM_JAVA_LOG(INFO) << "Adding component: " << name << " (" << phase << "): " << concentration;
 

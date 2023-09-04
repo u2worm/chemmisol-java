@@ -19,23 +19,7 @@
 
 <build>
   <plugins>
-    <plugin>
-      <groupId>org.codehaus.mojo</groupId> 
-      <artifactId>properties-maven-plugin</artifactId> 
-      <version>1.0.0</version> 
-      <executions> 
-        <execution> 
-          <phase>generate-test-resources</phase> 
-          <goals> 
-            <goal>write-project-properties</goal> 
-          </goals> 
-          <configuration> 
-            <outputFile>${project.build.outputDirectory}/chemmisol.setup.properties</outputFile> 
-          </configuration> 
-        </execution> 
-      </executions> 
-    </plugin>
-    <plugin>
+      <plugin>
       <groupId>com.googlecode.cmake-maven-project</groupId>
       <artifactId>cmake-maven-plugin</artifactId>
       <version>3.26.3-b1</version>
@@ -121,6 +105,22 @@
           </configuration>
         </execution>
       </executions>
+    </plugin>
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId> 
+        <artifactId>properties-maven-plugin</artifactId> 
+        <version>1.0.0</version> 
+        <executions> 
+            <execution> 
+                <phase>generate-test-resources</phase> 
+                <goals> 
+                    <goal>write-project-properties</goal> 
+                </goals> 
+                <configuration> 
+                    <outputFile>${project.build.outputDirectory}/chemmisol.setup.properties</outputFile> 
+                </configuration> 
+            </execution> 
+        </executions> 
     </plugin>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>

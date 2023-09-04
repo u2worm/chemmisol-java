@@ -6,7 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import ummisco.gama.chemmisol.Chemmisol;
+import java.io.IOException;
+
 import ummisco.gama.chemmisol.ChemicalSystem.ChemmisolCoreException;
 
 /**
@@ -15,7 +16,16 @@ import ummisco.gama.chemmisol.ChemicalSystem.ChemmisolCoreException;
 public class ChemmisolSystemTest 
 {
 	static {
-		Chemmisol.loadLibraryFromDefaultProperties();
+		try {
+			Chemmisol.loadChemmisolLibrariesFromProperties(
+					ChemmisolSystemTest.class,
+					// Test properties, see the pom.xml in setup directory
+					"chemmisol.setup.properties",
+					"cmake.build.directory"
+					);
+		} catch(IOException e) {
+			System.err.println(e);
+		}
 	}
 
 	/**
@@ -85,7 +95,7 @@ public class ChemmisolSystemTest
 			ChemicalComponent h = new ChemicalComponent("h", Phase.AQUEOUS, 0);
 			system.addComponent(h);
 			system.fixPH(7.5, h);
-			assertEquals(h.getConcentration(), Math.pow(10, -7.5), 1e-15);
+			assertEquals(h.getSpecies().getConcentration(), Math.pow(10, -7.5), 1e-15);
 		}
 	}
 
@@ -109,19 +119,16 @@ public class ChemmisolSystemTest
 			system.solve();
 
 			assertDoubleEquals(
-					PO4.getConcentration(), PO4.getSpecies().getConcentration()
-					);
-			assertDoubleEquals(
 					PO4.getTotalConcentration(), 0.1
 					);
 			assertDoubleEquals(
-					PO4.getConcentration() + H4PO3.getConcentration(),
-					0.1
+					PO4.getSpecies().getConcentration() + H4PO3.getConcentration(),
+					PO4.getTotalConcentration()
 					);
 			assertDoubleEquals(
 					Math.pow(10, 13.192),
 					H4PO3.getConcentration()/(
-						PO4.getConcentration()*Math.pow(system.concentration("H+"), 4)
+						PO4.getSpecies().getConcentration()*Math.pow(system.concentration("H+"), 4)
 						)
 					);
 		}
@@ -152,19 +159,16 @@ public class ChemmisolSystemTest
 			system.solve();
 
 			assertDoubleEquals(
-					PO4.getConcentration(), PO4.getSpecies().getConcentration()
-					);
-			assertDoubleEquals(
 					PO4.getTotalConcentration(), 0.27
 					);
 			assertDoubleEquals(
-					PO4.getConcentration() + H4PO3.getConcentration(),
-					0.27
+					PO4.getSpecies().getConcentration() + H4PO3.getConcentration(),
+					PO4.getTotalConcentration()
 					);
 			assertDoubleEquals(
 					Math.pow(10, 13.192),
 					H4PO3.getConcentration()/(
-						PO4.getConcentration()*Math.pow(system.concentration("H+"), 4)
+						PO4.getSpecies().getConcentration()*Math.pow(system.concentration("H+"), 4)
 						)
 					);
 		}
@@ -193,7 +197,8 @@ public class ChemmisolSystemTest
 
 			assertDoubleEquals(
 					system.reactionQuotient("H4PO3"),
-					H4PO3.getConcentration() / (PO4.getConcentration() * Math.pow(H.getConcentration(), 4))
+					H4PO3.getConcentration() /
+					(PO4.getSpecies().getConcentration() * Math.pow(H.getSpecies().getConcentration(), 4))
 					);
 		}
 	}
