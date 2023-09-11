@@ -4,8 +4,8 @@ package ummisco.gama.chemmisol;
  * Represents a chemical species living in a chemical system.
  *
  * <p>
- * A chemical species is an entity that represents an actual species within a
- * chemical species, associated to a concentration. The interpretation of the
+ * A chemical species is an entity that represents an actual entity within a
+ * chemical system, associated to a concentration. The interpretation of the
  * concentration depends on the phase of the species (mol/l for aqueous species,
  * molar fraction for mineral species).
  * </p>

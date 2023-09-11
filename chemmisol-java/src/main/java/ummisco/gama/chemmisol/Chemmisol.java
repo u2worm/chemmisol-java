@@ -156,7 +156,7 @@ public class Chemmisol
 				break;
 			case RESOURCE_BUNDLE_PROTOCOL:
 				try {
-					System.out.println(LOG + "Loading native library into temporary file...");
+					System.out.print(LOG + "Loading native library into temporary file...");
 					// Creates a temporary file that will contain the unpacked
 					// native library
 					File temp_file = File.createTempFile(url_to_chemmisol_library.getFile() + "_", ".tmp")
@@ -169,7 +169,7 @@ public class Chemmisol
 
 					// Unpacks the library to the temporary file
 					library_bin.transferTo(new FileOutputStream(temp_file));
-					System.out.print(" Done.");
+					System.out.println(" Done.");
 
 					// Loads the native library from the temporary file
 					loadLibraryFromFile(temp_file.getAbsolutePath());

@@ -33,6 +33,15 @@ public class Reagent extends ChemicalEntity {
 		return coefficient;
 	}
 
+	/**
+	 * Sets the stoichiometric coefficient associated to this reagent.
+	 *
+	 * <p>
+	 * By convention, negative coefficients are associated to products, and
+	 * positive coefficients are associated to reactants.
+	 *
+	 * @param coefficient stoichiometric coefficient
+	 */
 	public void setCoefficient(int coefficient) {
 		this.coefficient = coefficient;
 	}
