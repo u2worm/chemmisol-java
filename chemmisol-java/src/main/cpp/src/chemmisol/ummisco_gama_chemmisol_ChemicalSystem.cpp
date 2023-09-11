@@ -3,9 +3,25 @@
 
 using namespace chemmisol;
 
-JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate
-(JNIEnv *, jclass) {
-	ChemicalSystem* system = new ChemicalSystem;
+JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__
+  (JNIEnv *, jclass) {
+	ChemicalSystem* system = new ChemicalSystem();
+	return (jlong) system;
+}
+
+JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__DDDLjava_lang_String_2
+(JNIEnv * env, jclass,
+ jdouble solid_concentration,
+ jdouble specific_surface_area,
+ jdouble site_concentration,
+ jstring surface_complex) {
+	JNIInterface jni_interface(env);
+	ChemicalSystem* system = new ChemicalSystem(
+			solid_concentration,
+			specific_surface_area,
+			site_concentration,
+			jni_interface.convert(surface_complex));
+	CHEM_JAVA_LOG(INFO) << "Mineral system: " << system->sitesQuantity();
 	return (jlong) system;
 }
 
@@ -66,9 +82,16 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_addComponent
 
 	  CHEM_JAVA_LOG(INFO) << "Adding component: " << name << " (" << phase << "): " << concentration;
 
+	  try {
 	  ((ChemicalSystem*) cpp_chemical_system)->addComponent(
 		  name, phase, concentration
 		  );
+	  } catch(const InvalidMineralSpeciesWithUndefinedSitesCount& e) {
+		  jni_interface.ThrowNew(
+				  "chemmisol::InvalidMineralSpeciesWithUndefinedSitesCount",
+				  "ummisco/gama/chemmisol/ChemicalSystem$ChemmisolCoreException",
+				  e);
+	  }
   }
 
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_fixPH

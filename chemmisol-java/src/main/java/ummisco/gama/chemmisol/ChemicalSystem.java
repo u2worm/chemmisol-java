@@ -23,6 +23,9 @@ import java.util.HashMap;
  * 	...
  * }
  * </pre>
+ *
+ * All quantities must currently be specified in <b>core units</b> of the
+ * <a href=https://u2worm.github.io/chemmisol-cpp/index.html>chemmisol unit system</a>.
  */
 public class ChemicalSystem implements AutoCloseable {
 	private static final Cleaner cleaner = Cleaner.create();
@@ -68,17 +71,55 @@ public class ChemicalSystem implements AutoCloseable {
 	private long chemical_system_ptr;
 	private Map<String, ChemicalSpecies> tracked_species;
 
-	/**
-	 * Initializes a default chemical system.
-	 */
-	public ChemicalSystem() {
-		chemical_system_ptr = ChemicalSystem.allocate();
-		this.clean_state = new CleanState(chemical_system_ptr);
+	private ChemicalSystem(long chemical_system_ptr) {
+		this.chemical_system_ptr = chemical_system_ptr;
+		this.clean_state = new CleanState(this.chemical_system_ptr);
 		this.cleanable = cleaner.register(this, clean_state);
 		this.tracked_species = new HashMap<String, ChemicalSpecies>();
 	}
 
+	/**
+	 * Initializes a default chemical system.
+	 */
+	public ChemicalSystem() {
+		this(ChemicalSystem.allocate());
+	}
+
+	/**
+	 * Initializes a mineral chemical system.
+	 *
+	 * Example units are provided for each parameter for a better understanding,
+	 * but values must at least be specified so that the value of
+	 * <code>solid_concentration * specific_surface_area *
+	 * site_concentration</code> is expressed in mol/l. The simplest way is to
+	 * only use chemmisol core units, i.e. g/l, m2/g and mol/m2.
+	 *
+	 * @param solid_concentration Quantity of mineral in suspension in
+	 * the solution, expressed in g/l.
+	 * @param specific_surface_area Surface of the solid in contact with
+	 * the solution per unit of mass, usually expressed in m2/g.
+	 * @param site_concentration Quantity of sites per unit of surface
+	 * in contact with the solution, usually expressed as entities/nm2.
+	 * @param surface_complex Name of the surface complex (for example, =SOH). A
+	 * mineral component with this name is automatically added.
+	 */
+	public ChemicalSystem(
+			double solid_concentration,
+			double specific_surface_area,
+			double site_concentration,
+			String surface_complex) {
+		this(ChemicalSystem.allocate(
+					solid_concentration, specific_surface_area, site_concentration,
+					surface_complex
+					));
+			}
+
 	private native static long allocate();
+	private native static long allocate(
+			double solid_concentration,
+			double specific_surface_area,
+			double site_concentration,
+			String surface_complex);
 	private native static void dispose(long chemical_system_ptr);
 
 	private native static void addReaction(long chemical_system_ptr, Reaction reaction);
@@ -124,9 +165,12 @@ public class ChemicalSystem implements AutoCloseable {
 	 *
 	 * @param component Component to add to this chemical system.
 	 *
+	 * @throws ChemmisolCoreException if an exception occurs while setting up
+	 * the chemical system in the native {@code chemmisol-cpp} library.
+	 *
 	 * @see addSpecies(ChemicalSpecies)
 	 */
-	public void addComponent(ChemicalComponent component) {
+	public void addComponent(ChemicalComponent component) throws ChemmisolCoreException {
 		ChemicalSystem.addComponent(chemical_system_ptr, component);
 		addSpecies(component.getSpecies());
 	}
@@ -204,6 +248,9 @@ public class ChemicalSystem implements AutoCloseable {
 	 * ChemicalComponent#getTotalConcentration(), and sets the total
 	 * concentration of the component within the internal {@code chemmisol-cpp}
 	 * solver instance.
+	 *
+	 * The total concentration must be expressed in mol/l for aqueous species,
+	 * and as a molar fraction (without unit) for mineral species.
 	 *
 	 * @param component Chemical component to set with the specified total
 	 * concentration.

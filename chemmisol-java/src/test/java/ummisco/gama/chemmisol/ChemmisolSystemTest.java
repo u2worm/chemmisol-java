@@ -62,7 +62,7 @@ public class ChemmisolSystemTest
 	}
 
 	@Test
-	public void addComponent()
+	public void addComponent() throws ChemmisolCoreException
 	{
 		try (ChemicalSystem system = new ChemicalSystem()) {
 			Reaction test_reaction = new Reaction("H4PO3", 13.192)
@@ -89,7 +89,7 @@ public class ChemmisolSystemTest
 	}
 
 	@Test
-	public void fixPHinComponent()
+	public void fixPHinComponent() throws ChemmisolCoreException
 	{
 		try (ChemicalSystem system = new ChemicalSystem()) {
 			ChemicalComponent h = new ChemicalComponent("h", Phase.AQUEOUS, 0);
@@ -234,6 +234,49 @@ public class ChemmisolSystemTest
 				.addReagent("O2", -1, Phase.AQUEOUS));
 
 			system.solve();
+		}
+	}
+
+	@Test(expected = ChemmisolCoreException.class)
+	public void addInvalidMineralComponent() throws ChemmisolCoreException {
+		try (ChemicalSystem system = new ChemicalSystem()) {
+			system.addComponent(new ChemicalComponent("=SOH", Phase.MINERAL, 1.0));
+		}
+	}
+
+	@Test
+	public void solveMineralEquilibrium() throws ChemmisolCoreException {
+		try (ChemicalSystem system = new ChemicalSystem(
+					2.5, // g/l
+					24.2, // m2/g
+					0.8 * 1e9 / 6.02214076e23, // 0.8 entitities/nm2
+					"=SOH"
+					)) {
+			// Missing components, so that the reaction has too many "produced
+			// species".
+			system.addComponent(new Solvent("H2O"));
+
+			system.addReaction(new Reaction("HO-", -14)
+					.addReagent("HO-", -1, Phase.AQUEOUS)
+					.addReagent("H", -1, Phase.AQUEOUS)
+					.addReagent("H2O", 1, Phase.AQUEOUS));
+			system.addReaction(new Reaction("=SOH2", 3.46)
+					.addReagent("=SOH2", -1, Phase.MINERAL)
+					.addReagent("=SOH", 1, Phase.AQUEOUS)
+					.addReagent("H", 1, Phase.AQUEOUS));
+
+			ChemicalComponent H = new ChemicalComponent("H", Phase.AQUEOUS, 0.0);
+			system.addComponent(H);
+			ChemicalSpecies SOH2 = new ChemicalSpecies("=SOH2", Phase.MINERAL, 0.0);
+			system.addSpecies(SOH2);
+			system.fixPH(7, H);
+			system.solve();
+
+			assertDoubleEquals(
+					system.reactionQuotient("=SOH2"),
+					SOH2.getConcentration() /
+					(system.concentration("=SOH") * H.getSpecies().getConcentration())
+					);
 		}
 	}
 }

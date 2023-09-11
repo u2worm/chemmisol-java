@@ -12,8 +12,16 @@ extern "C" {
  * Method:    allocate
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate
+JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__
   (JNIEnv *, jclass);
+
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    allocate
+ * Signature: (DDDLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__DDDLjava_lang_String_2
+  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jstring);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
