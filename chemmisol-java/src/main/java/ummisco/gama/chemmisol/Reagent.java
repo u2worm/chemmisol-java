@@ -29,7 +29,11 @@ public class Reagent extends ChemicalEntity {
 	 *
 	 * @return stoichiometric coefficient
 	 */
-	int getCoefficient() {
+	public int getCoefficient() {
 		return coefficient;
+	}
+
+	public void setCoefficient(int coefficient) {
+		this.coefficient = coefficient;
 	}
 }
