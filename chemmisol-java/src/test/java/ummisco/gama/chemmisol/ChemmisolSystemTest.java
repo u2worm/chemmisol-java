@@ -245,15 +245,31 @@ public class ChemmisolSystemTest
 	}
 
 	@Test
+	public void sitesQuantity() {
+		try (ChemicalSystem system = new ChemicalSystem(
+					2.5, // g/l
+					24.2, // m2/g
+					0.8 * 1e18 / 6.02214076e23 // 0.8 entitities/nm2
+					)) {
+			// Temporary
+			double system_volume = 1.0;
+			assertDoubleEquals(
+					2.5 * 24.2 * 0.8 * 1e18 / 6.02214076e23 * system_volume,
+					system.sitesQuantity());
+					}
+	}
+
+	@Test
 	public void solveMineralEquilibrium() throws ChemmisolCoreException {
 		try (ChemicalSystem system = new ChemicalSystem(
 					2.5, // g/l
 					24.2, // m2/g
-					0.8 * 1e9 / 6.02214076e23, // 0.8 entitities/nm2
-					"=SOH"
+					0.8 * 1e18 / 6.02214076e23 // 0.8 entitities/nm2
 					)) {
-			// Missing components, so that the reaction has too many "produced
-			// species".
+
+			ChemicalComponent surface_complex
+				= new ChemicalComponent("=SOH", Phase.MINERAL, 1.0);
+			system.addComponent(surface_complex);
 			system.addComponent(new Solvent("H2O"));
 
 			system.addReaction(new Reaction("HO-", -14)
@@ -275,7 +291,7 @@ public class ChemmisolSystemTest
 			assertDoubleEquals(
 					system.reactionQuotient("=SOH2"),
 					SOH2.getConcentration() /
-					(system.concentration("=SOH") * H.getSpecies().getConcentration())
+					(surface_complex.getSpecies().getConcentration() * H.getSpecies().getConcentration())
 					);
 		}
 	}

@@ -94,23 +94,19 @@ public class ChemicalSystem implements AutoCloseable {
 	 * site_concentration</code> is expressed in mol/l. The simplest way is to
 	 * only use chemmisol core units, i.e. g/l, m2/g and mol/m2.
 	 *
-	 * @param solid_concentration Quantity of mineral in suspension in
+	 * @param solid_concentration Mass concentration of mineral in suspension in
 	 * the solution, expressed in g/l.
 	 * @param specific_surface_area Surface of the solid in contact with
 	 * the solution per unit of mass, usually expressed in m2/g.
 	 * @param site_concentration Quantity of sites per unit of surface
 	 * in contact with the solution, usually expressed as entities/nm2.
-	 * @param surface_complex Name of the surface complex (for example, =SOH). A
-	 * mineral component with this name is automatically added.
 	 */
 	public ChemicalSystem(
 			double solid_concentration,
 			double specific_surface_area,
-			double site_concentration,
-			String surface_complex) {
+			double site_concentration) {
 		this(ChemicalSystem.allocate(
-					solid_concentration, specific_surface_area, site_concentration,
-					surface_complex
+					solid_concentration, specific_surface_area, site_concentration
 					));
 			}
 
@@ -118,8 +114,7 @@ public class ChemicalSystem implements AutoCloseable {
 	private native static long allocate(
 			double solid_concentration,
 			double specific_surface_area,
-			double site_concentration,
-			String surface_complex);
+			double site_concentration);
 	private native static void dispose(long chemical_system_ptr);
 
 	private native static void addReaction(long chemical_system_ptr, Reaction reaction);
@@ -133,6 +128,9 @@ public class ChemicalSystem implements AutoCloseable {
 			long chemical_system_ptr, String component_name);
 	private native static double reactionQuotient(
 			long chemical_system_ptr, String reaction_name);
+	private native static double sitesQuantity(
+			long chemical_system_ptr
+			);
 
 	/**
 	 * Adds a new reaction to the chemical system.
@@ -358,6 +356,19 @@ public class ChemicalSystem implements AutoCloseable {
 	 */
 	public double reactionQuotient(String reaction_name) {
 		return reactionQuotient(chemical_system_ptr, reaction_name);
+	}
+
+	/**
+	 * Returns the total quantity of sites of the surface complex, computed from
+	 * the solid_concentration, specific_surface_area and site_concentration
+	 * parameters specified in the ChemicalSystem definition.
+	 *
+	 * If those parameters were not provided, the quantity of sites is null.
+	 *
+	 * @return Total quantity of sites in the chemical system.
+	 */
+	public double sitesQuantity() {
+		return sitesQuantity(chemical_system_ptr);
 	}
 
 	/**

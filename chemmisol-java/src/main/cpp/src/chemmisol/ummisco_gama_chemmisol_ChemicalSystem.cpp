@@ -9,18 +9,16 @@ JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__
 	return (jlong) system;
 }
 
-JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__DDDLjava_lang_String_2
+JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__DDD
 (JNIEnv * env, jclass,
  jdouble solid_concentration,
  jdouble specific_surface_area,
- jdouble site_concentration,
- jstring surface_complex) {
+ jdouble site_concentration) {
 	JNIInterface jni_interface(env);
 	ChemicalSystem* system = new ChemicalSystem(
 			solid_concentration,
 			specific_surface_area,
-			site_concentration,
-			jni_interface.convert(surface_complex));
+			site_concentration);
 	CHEM_JAVA_LOG(INFO) << "Mineral system: " << system->sitesQuantity();
 	return (jlong) system;
 }
@@ -136,8 +134,8 @@ JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_setUp
 JNIEXPORT void JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_solve
   (JNIEnv * env, jclass, jlong cpp_chemical_system) {
 	  JNIInterface jni_interface(env);
-	  CHEM_JAVA_LOG(INFO) << "Solving system using 100 iterations.";
-	  ((ChemicalSystem*) cpp_chemical_system)->setMaxIteration(100);
+	  CHEM_JAVA_LOG(INFO) << "Solving system using 1000 iterations.";
+	  ((ChemicalSystem*) cpp_chemical_system)->setMaxIteration(1000);
 	  try {
 		  ((ChemicalSystem*) cpp_chemical_system)->solveEquilibrium();
 	  }
@@ -169,4 +167,10 @@ JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_reactionQuo
 	  JNIInterface jni_interface(env);
 	  return ((ChemicalSystem*) chemical_system_ptr)
 		  ->reactionQuotient(jni_interface.convert(jreaction_name));
+  }
+
+JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_sitesQuantity
+  (JNIEnv *, jclass, jlong chemical_system_ptr) {
+	  return ((ChemicalSystem*) chemical_system_ptr)
+		  ->sitesQuantity();
   }

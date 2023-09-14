@@ -18,10 +18,10 @@ JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
  * Method:    allocate
- * Signature: (DDDLjava/lang/String;)J
+ * Signature: (DDD)J
  */
-JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__DDDLjava_lang_String_2
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jstring);
+JNIEXPORT jlong JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_allocate__DDD
+  (JNIEnv *, jclass, jdouble, jdouble, jdouble);
 
 /*
  * Class:     ummisco_gama_chemmisol_ChemicalSystem
@@ -94,6 +94,14 @@ JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_concentrati
  */
 JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_reactionQuotient
   (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     ummisco_gama_chemmisol_ChemicalSystem
+ * Method:    sitesQuantity
+ * Signature: (J)D
+ */
+JNIEXPORT jdouble JNICALL Java_ummisco_gama_chemmisol_ChemicalSystem_sitesQuantity
+  (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus
 }
